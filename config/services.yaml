@@ -11,6 +11,17 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    _instanceof:
+        Poposki\KernelBundle\Application\Messenger\Command\CommandHandlerInterface:
+            public: true
+            tags:
+                - { name: messenger.message_handler, bus: messenger.bus.command }
+
+        Poposki\KernelBundle\Application\Messenger\Query\QueryHandlerInterface:
+            public: true
+            tags:
+                - { name: messenger.message_handler, bus: messenger.bus.query }
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -19,6 +30,13 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # App\Tests namespace for test doubles/mocks
+    App\Tests\:
+        resource: '../tests/'
+
+    DataFixtures\:
+        resource: '../fixtures/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

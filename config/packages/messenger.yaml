@@ -1,5 +1,6 @@
 framework:
     messenger:
+        default_bus: messenger.bus.command
         failure_transport: failed
 
         transports:
@@ -21,8 +22,16 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
 
             # Route your messages to the transports
-            'App\Message\*': sync
-            
+            'App\Application\Messenger\*': sync
+
+        buses:
+            messenger.bus.command:
+                middleware:
+                    - doctrine_transaction
+                    - validation
+
+            messenger.bus.query: ~
+
 when@test:
     framework:
         messenger:

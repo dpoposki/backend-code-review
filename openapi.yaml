@@ -23,6 +23,7 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/MessageListResponse'
                 type: "object"
                 properties:
                   messages:
@@ -47,16 +48,47 @@ paths:
                     status: "sent"
                   - text: "Thanks, I'm fine. How about you?"
                     status: "sent"
-  /messages/send:
-    get:
-      summary: Send a Message
+    post:
+      summary: Adds a Message
       parameters:
-        - name: text
-          in: query
-          description: The text you want to send
-          required: true
-          schema:
-            type: "string"
+        -   name: text
+            in: query
+            description: The text you want to send
+            required: true
+            schema:
+              type: "string"
       responses:
         '204':
           description: Successfully sent
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        uuid:
+          type: string
+        text:
+          type: string
+        status:
+          type: string
+          enum:
+            - sent
+            - read
+    MessageListResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+      example:
+        messages:
+          - uuid: "1ef45346-c7fd-62cc-b70d-99e50374d1bb"
+            text: "Hello, World!"
+            status: "read"
+          - uuid: "1ef4534f-09f7-6b70-87b3-fb8ae977795c"
+            text: "How are you today?"
+            status: "sent"
+          - uuid: "1ef4535d-b5d6-66e0-9368-5daa614746b9"
+            text: "Thanks, I'm fine. How about you?"
+            status: "sent"
